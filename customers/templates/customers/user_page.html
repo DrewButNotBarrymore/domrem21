@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="row justify-content-center" style="margin: 5%">
+
+        <h2 class="row justify-content-center mb-3">
+            {% if user.profile.name %}
+                Профиль пользователя<br> {{ user.profile.name }}
+            {% else %}
+                Профиль пользователя<br> {{ user.email }}
+            {% endif %}
+        </h2>
+
+        <div class="col-md-5">
+
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ update_user.as_p }}
+                {{ form.non_field.errors }}
+                {% if user.type == 'CO' %}
+                    <div class="mb-3">
+                        <label for="{{ update_profile.name.id_for_label }}">Название компании</label>
+                        {{ update_profile.name }}
+                        <div class="invalid-feedback">
+                            {{ update_user.name.errors}}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ update_profile.contact_person.id_for_label }}">Контактное лицо:</label><br>
+                        {{ update_profile.contact_person }}
+                        <div class="invalid-feedback">
+                            {{ update_profile.contact_person.errors}}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ update_profile.photo.id_for_label }}">Изображение профиля:</label><br>
+                        {{ update_profile.photo }}
+                        <div class="invalid-feedback">
+                            {{ update_profile.photo.errors}}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ update_profile.about.id_for_label }}">О компании:</label><br>
+                        {{ update_profile.about }}
+                        <div class="invalid-feedback">
+                            {{ update_profile.about.errors}}
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="mb-3">
+                        <label for="{{ update_profile.name.id_for_label }}">Имя пользователя</label>
+                        {{ update_profile.name }}
+                        <div class="invalid-feedback">
+                            {{ update_user.name.errors}}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ update_profile.photo.id_for_label }}">Изображение профиля:</label><br>
+                        {{ update_profile.photo }}
+                        <div class="invalid-feedback">
+                            {{ update_profile.photo.errors}}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ update_profile.about.id_for_label }}">О пользователе:</label><br>
+                        {{ update_profile.about }}
+                        <div class="invalid-feedback">
+                            {{ update_profile.about.errors}}
+                        </div>
+                    </div>
+                {% endif %}
+
+                <div class="text-center mt-3">
+                    <button type="submit" class="btn btn-grey btn-lg mb-3">Сохранить изменения</button>
+                </div>
+            </form>
+             <a class="link-grey" href="{% url 'change_password' %}">Изменить пароль</a>
+        </div>
+    </div>
+
+    <h2 class="row justify-content-center mt-3 mb-3">Ваши объявления</h2>
+
+    <div class="row">
+        {% for item in ads_list %}
+            <div class="col-md-6">
+                <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                    <div class="col p-4 d-flex flex-column position-static">
+                        {% if item.author.type == 'IM' %}
+                            {% if item.author.profile.name %}
+                                <strong class="d-inline-block mb-2 text-grey">{{ item.author.profile.name }}</strong>
+                            {% else %}
+                                <strong class="d-inline-block mb-2 text-grey">{{ item.author.email }}</strong>
+                            {% endif %}
+                        {% else %}
+                            {% if item.author.profile.name %}
+                                <strong class="d-inline-block mb-2 text-purple">{{ item.author.profile.name }}</strong>
+                            {% else %}
+                                <strong class="d-inline-block mb-2 text-purple">{{ item.author.email }}</strong>
+                            {% endif %}
+                        {% endif %}
+                        <h3 class="mb-0">{{ item.title|truncatechars:40 }}</h3>
+                        <div class="mb-1 text-muted">{{ item.updated_at|date:"Y-m-d H:i" }}</div>
+                        <p class="mb-auto">{{ item.content|safe|truncatechars:75 }}</p>
+                        <a href="{{ item.get_absolute_url }}" class="stretched-link"></a>
+                    </div>
+                    <div class="col-auto d-none d-lg-block">
+                        {% if item.author.profile.photo %}
+                        <img class="bd-placeholder-img" width="200" height=auto src="{{ item.author.profile.photo.url }}">
+                        {% else %}
+                        <img class="bd-placeholder-img" width="200" height=auto src="{% static 'img/default.png' %}">
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <p class="m-3">Вы пока еще не создали ни одного объявления.</p>
+        {% endfor %}
+    </div>
+
+
+{% endblock %}

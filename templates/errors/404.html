@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h2 class="justify-content-center row mt-3 mb-5">Запрашиваемая страница не найдена</h2>
+    <div style="text-align: center">
+        <p>Возможно, неправильно указан путь в адресной строке или страница была удалена.</p>
+        <p>Возврат на <a class="link-grey" href="{% url 'home' %}">главную страницу</a></p>
+    </div>
+{% endblock %}

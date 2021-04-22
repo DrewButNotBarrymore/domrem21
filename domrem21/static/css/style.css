@@ -1,0 +1,149 @@
+{% load static %}
+body {
+    /*background: linear-gradient(45deg, #EECFBA, #C5DDE8);*/
+    background: linear-gradient(90deg, #D0D0D0, #282828);
+}
+* {
+    margin: 0;
+    padding: 0;
+}
+html,
+body {
+    height: 100%;
+}
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+.content {
+    flex: 1 0 auto;
+}
+
+.banner-text {
+    color: #ffffff;
+    text-shadow: 2px 2px 2px black, 0 0 1em black;
+}
+
+.btn-grey {
+    color:#686C5E;
+    border-color:#686C5E
+}
+
+.btn-grey:hover, focus, active {
+    color:#fff;
+    background-color:#686C5E;
+    border-color:#686C5E
+}
+
+.btn-light-grey {
+    color:#BBBDB6;border-color:#BBBDB6
+}
+
+.btn-light-grey:hover, focus, active {
+    color:#fff;background-color:#D9DAD6;border-color:#D9DAD6
+}
+
+.link-light-grey {
+    color: #BBBDB6;
+    text-decoration: none;
+}
+
+.link-light-grey:hover, focus, active {
+    color: #D9DAD6;
+}
+
+.link-grey {
+    color: #686C5E;
+    text-decoration: none;
+}
+
+.link-grey:hover, focus, active {
+    color:#BBBDB6;
+}
+
+.text-grey {
+    color:#686C5E;
+}
+
+.text-purple {
+    color: #7a6273;
+}
+
+.text-light-grey {
+    color: #BBBDB6;
+}
+
+.form-control-grey {
+    border-color: #686C5E;
+}
+
+/*a.disabled {*/
+/*    pointer-events: none; !* делаем ссылку некликабельной *!*/
+/*    cursor: default;  !* устанавливаем курсор в виде стрелки *!*/
+
+/*}*/
+
+[data-tooltip] {
+    position: relative; /* Относительное позиционирование */
+}
+[data-tooltip]::after {
+    content: attr(data-tooltip); /* Выводим текст */
+    position: absolute; /* Абсолютное позиционирование */
+    width: 300px; /* Ширина подсказки */
+    left: 0; top: 0; /* Положение подсказки */
+    background: #686C5E; /* Синий цвет фона */
+    color: #fff; /* Цвет текста */
+    padding: 0.5em; /* Поля вокруг текста */
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* Параметры тени */
+    pointer-events: none; /* Подсказка */
+    opacity: 0; /* Подсказка невидима */
+    transition: 1s; /* Время появления подсказки */
+}
+[data-tooltip]:hover::after {
+    opacity: 1; /* Показываем подсказку */
+    top: 2em; /* Положение подсказки */
+}
+
+.page-link-grey {
+    color:#686C5E;
+    border-color:#686C5E
+}
+
+.page-link-grey:hover, focus, active {
+    color: #fff;
+    background-color: #686C5E;
+    border-color: #686C5E;
+}
+
+.page-link-grey-active {
+        color: #fff;
+    background-color: #686C5E;
+}
+
+
+.close {
+position: absolute;
+right: 32px;
+top: 2px;
+width: 32px;
+height: 32px;
+opacity: 0.5;
+}
+.close:hover {
+opacity: 1;
+}
+.close:before, .close:after {
+position: absolute;
+left: 15px;
+content: ' ';
+height: 33px;
+width: 2px;
+background-color: #333;
+}
+.close:before {
+transform: rotate(45deg);
+}
+.close:after {
+transform: rotate(-45deg);
+}
