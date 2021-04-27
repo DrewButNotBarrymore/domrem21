@@ -1,10 +1,13 @@
+from customers.models import CustomUser
+
 from django.db import models
 from django.urls import reverse
-from customers.models import CustomUser
 
 
 class Category(models.Model):
-    title = models.CharField(max_length=150, db_index=True, verbose_name='Наменование категории')
+    title = models.CharField(
+        max_length=150, db_index=True, verbose_name='Наменование категории'
+    )
     keys = models.CharField(max_length=150, blank=True)
 
     def get_absolute_url(self):
@@ -20,8 +23,12 @@ class Category(models.Model):
 
 
 class Ads(models.Model):
-    author = models.ForeignKey(CustomUser, on_delete=models.PROTECT, verbose_name='Автор')
-    category = models.ForeignKey('Category', on_delete=models.PROTECT, verbose_name='Категория')
+    author = models.ForeignKey(
+        CustomUser, on_delete=models.PROTECT, verbose_name='Автор'
+    )
+    category = models.ForeignKey(
+        'Category', on_delete=models.PROTECT, verbose_name='Категория'
+    )
     title = models.CharField(max_length=150, verbose_name='Название')
     content = models.TextField(blank=True, verbose_name='Текст объявления')
     phone = models.TextField(blank=True, max_length=20, verbose_name='Телефон')
@@ -43,8 +50,16 @@ class Ads(models.Model):
 
 
 class Images(models.Model):
-    ad = models.ForeignKey(Ads, blank=True, on_delete=models.CASCADE, related_name='images', verbose_name='Объявление')
-    img = models.ImageField(upload_to='photos/%Y/%m/%d/', verbose_name='Фото', blank=True)
+    ad = models.ForeignKey(
+        Ads,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name='images',
+        verbose_name='Объявление',
+    )
+    img = models.ImageField(
+        upload_to='photos/%Y/%m/%d/', verbose_name='Фото', blank=True
+    )
 
     class Meta:
         verbose_name = "Изображения"

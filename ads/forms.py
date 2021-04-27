@@ -1,12 +1,14 @@
+from ads.models import Ads
+
 from ckeditor.widgets import CKEditorWidget
 from django import forms
 
-from ads.models import Ads
-
 
 class AdForm(forms.ModelForm):
-    photos = forms.ImageField(label='Загрузите примеры ваших работ',
-                              widget=forms.FileInput(attrs={'multiple': 'multiple'}))
+    photos = forms.ImageField(
+        label='Загрузите примеры ваших работ',
+        widget=forms.FileInput(attrs={'multiple': 'multiple'}),
+    )
     content = forms.CharField(label='Текст объявления', widget=CKEditorWidget())
 
     class Meta:

@@ -1,20 +1,21 @@
+from ads.models import Ads
+from customers.forms import (
+    ContactForm,
+    CustomUserCreationForm,
+    CustomUserLoginForm,
+    CustomUserUpdateForm,
+    MyPasswordChangeForm,
+    ProfileUpdateForm,
+)
+from customers.models import CustomUser, Profile
+
 from django.contrib import messages
-from django.contrib.auth.hashers import check_password
-from django.contrib.auth.views import PasswordResetView
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth import login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
-from django.template import RequestContext
-
-from ads.models import Ads
-from customers.forms import CustomUserCreationForm, CustomUserLoginForm, CustomUserUpdateForm, ProfileUpdateForm, \
-    ContactForm, MyPasswordChangeForm
-from django.contrib.auth import login, logout, authenticate, update_session_auth_hash
-
-from customers.models import CustomUser, Profile
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.shortcuts import get_object_or_404, redirect, render
 
 
 def register(request):
@@ -23,7 +24,9 @@ def register(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            messages.success(request, 'Вы успешно зарегестрированы! Заполните, пожалуйста, профиль.')
+            messages.success(
+                request, 'Вы успешно зарегестрированы! Заполните, пожалуйста, профиль.'
+            )
             return redirect('edit_profile')
         else:
             messages.error(request, 'Ошибка регистрации!')
@@ -66,13 +69,15 @@ def edit_profile(request):
     ads_list = Ads.objects.filter(author=request.user)
 
     if request.method == "POST":
-        update_profile = ProfileUpdateForm(request.POST, request.FILES, instance=request.user.profile)
+        update_profile = ProfileUpdateForm(
+            request.POST, request.FILES, instance=request.user.profile
+        )
         update_user = CustomUserUpdateForm(request.POST, instance=request.user)
 
         if update_user.is_valid() and update_profile.is_valid():
             update_user.save()
             update_profile.save()
-            messages.success(request, f'Ваш аккаунт был успешно обновлен')
+            messages.success(request, 'Ваш аккаунт был успешно обновлен')
             return redirect('edit_profile')
     else:
         update_profile = ProfileUpdateForm(instance=request.user.profile)
@@ -102,18 +107,24 @@ def contact(request):
     if request.method == "POST":
         form = ContactForm(request.POST)
         if form.is_valid():
-            mail = send_mail(form.cleaned_data['subject'], form.cleaned_data['content'],
-                             'domrem21@mail.ru', ['undrew.ivanov@yandex.ru'], fail_silently=True)
+            mail = send_mail(
+                form.cleaned_data['subject'],
+                form.cleaned_data['content'],
+                'domrem21@mail.ru',
+                ['undrew.ivanov@yandex.ru'],
+                fail_silently=True,
+            )
             if mail:
-                messages.success(request, f'Письмо отправлено!')
+                messages.success(request, 'Письмо отправлено!')
                 return redirect('contact')
             else:
-                messages.error(request, f'Ошибка отправки!')
+                messages.error(request, 'Ошибка отправки!')
         else:
             messages.error(request, 'Ошибка валидации!')
     else:
         form = ContactForm()
     return render(request, 'customers/contact_form.html', {"form": form})
+
 
 @login_required
 def change_password(request):
@@ -128,6 +139,4 @@ def change_password(request):
             messages.error(request, 'Please correct the error below.')
     else:
         form = MyPasswordChangeForm(request.user)
-    return render(request, 'customers/change_password.html', {
-        'form': form
-    })
+    return render(request, 'customers/change_password.html', {'form': form})
