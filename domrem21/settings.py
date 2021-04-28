@@ -95,7 +95,9 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        'NAME': (
+            'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'
+        ),
     },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
@@ -128,9 +130,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'domrem21/static')
-]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'domrem21/static')]
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
@@ -144,27 +144,53 @@ CKEDITOR_UPLOAD_PATH = "uploads/"
 CKEDITOR_CONFIGS = {
     'default': {
         'toolbar': [
-            ['Undo', 'Redo',
-             '-', 'Bold', 'Italic', 'Underline',
-             '-', 'Link', 'Unlink', 'Anchor',
-             '-', 'Format',
-             '-', 'Maximize',
-             '-', 'Table',
-             '-', 'Image',
-             '-', 'Source',
-             '-', 'NumberedList', 'BulletedList'
+            [
+                'Undo',
+                'Redo',
+                '-',
+                'Bold',
+                'Italic',
+                'Underline',
+                '-',
+                'Link',
+                'Unlink',
+                'Anchor',
+                '-',
+                'Format',
+                '-',
+                'Maximize',
+                '-',
+                'Table',
+                '-',
+                'Image',
+                '-',
+                'Source',
+                '-',
+                'NumberedList',
+                'BulletedList',
             ],
-            ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock',
-             '-', 'Font', 'FontSize', 'TextColor',
-             '-', 'Outdent', 'Indent',
-             '-', 'HorizontalRule',
-             '-', 'Blockquote'
-            ]
+            [
+                'JustifyLeft',
+                'JustifyCenter',
+                'JustifyRight',
+                'JustifyBlock',
+                '-',
+                'Font',
+                'FontSize',
+                'TextColor',
+                '-',
+                'Outdent',
+                'Indent',
+                '-',
+                'HorizontalRule',
+                '-',
+                'Blockquote',
+            ],
         ],
         'height': 400,
         'width': '100%',
         'toolbarCanCollapse': False,
-        'forcePasteAsPlainText': True
+        'forcePasteAsPlainText': True,
     }
 }
 

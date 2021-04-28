@@ -1,16 +1,13 @@
+from ads.forms import AdForm
+from ads.models import Ads, Category, Images
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.core.exceptions import PermissionDenied
 from django.core.files.base import ContentFile
 from django.db.models import Q
 from django.http import JsonResponse
-from django.shortcuts import render, redirect
-from django.template import RequestContext
-from django.views.generic import ListView, DetailView
-# from .utils import MyMixin
-
-from ads.forms import AdForm
-from ads.models import Ads, Images, Category
+from django.shortcuts import redirect, render
+from django.views.generic import DetailView, ListView
 
 
 class HomeAds(ListView):
@@ -65,7 +62,9 @@ class AdsByCategory(ListView):
         return context
 
     def get_queryset(self):
-        return Ads.objects.filter(category_id=self.kwargs['category_id'], is_published=True).select_related('category')
+        return Ads.objects.filter(
+            category_id=self.kwargs['category_id'], is_published=True
+        ).select_related('category')
 
 
 class DetailAd(DetailView):
@@ -82,9 +81,14 @@ def add_ad(request):
     elif request.method == 'POST':
         form = AdForm(request.POST, request.FILES)
         if form.is_valid():
-            new_obj = Ads.objects.create(author=request.user, title=form.cleaned_data['title'],
-                                         category=form.cleaned_data['category'], phone=form.cleaned_data['phone'],
-                                         price=form.cleaned_data['price'], content=form.cleaned_data['content'])
+            new_obj = Ads.objects.create(
+                author=request.user,
+                title=form.cleaned_data['title'],
+                category=form.cleaned_data['category'],
+                phone=form.cleaned_data['phone'],
+                price=form.cleaned_data['price'],
+                content=form.cleaned_data['content'],
+            )
             for f in request.FILES.getlist('photos'):
                 data = f.read()
                 photo = Images(ad=new_obj)
@@ -102,14 +106,18 @@ class Search(ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['master_ads'] = Ads.objects.select_related('author'). \
-            filter(Q(title__icontains=self.request.GET.get('s')) | Q(content__icontains=self.request.GET.get('s')),
-                   is_published=1,
-                   author__type='IM')
-        context['company_ads'] = Ads.objects.select_related('author'). \
-            filter(Q(title__icontains=self.request.GET.get('s')) | Q(content__icontains=self.request.GET.get('s')),
-                   is_published=1,
-                   author__type='CO')
+        context['master_ads'] = Ads.objects.select_related('author').filter(
+            Q(title__icontains=self.request.GET.get('s'))
+            | Q(content__icontains=self.request.GET.get('s')),
+            is_published=1,
+            author__type='IM',
+        )
+        context['company_ads'] = Ads.objects.select_related('author').filter(
+            Q(title__icontains=self.request.GET.get('s'))
+            | Q(content__icontains=self.request.GET.get('s')),
+            is_published=1,
+            author__type='CO',
+        )
         context['s'] = f"s={self.request.GET.get('s')}&"
         context['search_value'] = self.request.GET.get('s')
         return context
@@ -117,7 +125,9 @@ class Search(ListView):
 
 def autocomplete(request):
     query_original = request.GET.get('term')
-    queryset = Category.objects.filter(Q(title__icontains=query_original) | Q(keys__icontains=query_original))
+    queryset = Category.objects.filter(
+        Q(title__icontains=query_original) | Q(keys__icontains=query_original)
+    )
     autocomplete_list = []
     autocomplete_list += [x.title for x in queryset]
     return JsonResponse(autocomplete_list, safe=False)
@@ -137,17 +147,14 @@ def edit_ad(request, pk):
                     photo = Images(ad=current_ad)
                     photo.img.save(f.name, ContentFile(data))
                     photo.save()
-                messages.success(request, f'Ваше объявление успешно обновлено')
+                messages.success(request, 'Ваше объявление успешно обновлено')
                 return redirect('edit_ad', pk=pk)
         else:
             form = AdForm(instance=current_ad)
     else:
         return redirect('home')
 
-    data = {
-        'form': form,
-        'current_ad': current_ad
-    }
+    data = {'form': form, 'current_ad': current_ad}
 
     return render(request, 'ads/edit_ad.html', data)
 
@@ -155,7 +162,7 @@ def edit_ad(request, pk):
 @login_required
 def remove_ad(request, pk):
     Ads.objects.filter(id=pk).delete()
-    messages.success(request, f'Объявление успешно удалено')
+    messages.success(request, 'Объявление успешно удалено')
     return redirect('edit_profile')
 
 
@@ -164,7 +171,7 @@ def remove_img(request, pk):
     item = Images.objects.get(id=pk)
     if request.user == item.ad.author:
         item.delete()
-        messages.success(request, f'Изображение успешно удалено')
+        messages.success(request, 'Изображение успешно удалено')
         return redirect('edit_ad', pk=item.ad.id)
     else:
         return redirect('home')

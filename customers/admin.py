@@ -2,20 +2,38 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import Group
 from django.utils.safestring import mark_safe
+
 from .models import CustomUser, Profile
 
 
 class CustomUserAdmin(UserAdmin):
-    list_display = ('email', 'type', 'date_joined', 'is_staff', 'is_active',)
-    list_filter = ('type', 'is_staff', 'is_active',)
+    list_display = (
+        'email',
+        'type',
+        'date_joined',
+        'is_staff',
+        'is_active',
+    )
+    list_filter = ('type', 'is_staff', 'is_active')
     fieldsets = (
         (None, {'fields': ('email', 'type', 'password', 'date_joined')}),
         ('Роли', {'fields': ('is_staff', 'is_active')}),
     )
     add_fieldsets = (
-        (None, {
-            'classes': ('wide',),
-            'fields': ('email', 'type', 'password1', 'password2', 'is_staff', 'is_active')}),
+        (
+            None,
+            {
+                'classes': ('wide',),
+                'fields': (
+                    'email',
+                    'type',
+                    'password1',
+                    'password2',
+                    'is_staff',
+                    'is_active',
+                ),
+            },
+        ),
     )
     list_editable = ('is_active',)
     search_fields = ('email',)
@@ -24,10 +42,18 @@ class CustomUserAdmin(UserAdmin):
 
 
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'name', 'contact_person', 'about', 'get_photo', 'photo',)
-    list_display_links = ('id', 'name',)
+    list_display = (
+        'id',
+        'user',
+        'name',
+        'contact_person',
+        'about',
+        'get_photo',
+        'photo',
+    )
+    list_display_links = ('id', 'name')
     list_filter = ('user',)
-    search_fields = ('name', 'user__email',)
+    search_fields = ('name', 'user__email')
     readonly_fields = ('get_photo',)
 
     def get_photo(self, obj):

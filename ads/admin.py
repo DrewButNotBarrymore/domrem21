@@ -1,12 +1,13 @@
+from ads.models import Ads, Category, Images
+
 from django.contrib import admin
 from django.utils.safestring import mark_safe
-from .models import *
 
 
 class ImagesAdmin(admin.ModelAdmin):
-    list_display = ('id', 'get_photo', 'ad', 'img', )
+    list_display = ('id', 'get_photo', 'ad', 'img')
     list_display_links = ('id', 'ad')
-    search_fields = ('id', 'ad__title',)
+    search_fields = ('id', 'ad__title')
 
     def get_photo(self, obj):
         if obj.img:
@@ -18,7 +19,14 @@ class ImagesAdmin(admin.ModelAdmin):
 
 
 class AdsAdmin(admin.ModelAdmin):
-    list_display = ('title', 'created_at', 'updated_at', 'category', 'author', 'is_published',)
+    list_display = (
+        'title',
+        'created_at',
+        'updated_at',
+        'category',
+        'author',
+        'is_published',
+    )
     list_filter = ('category__title',)
 
     def get_readonly_fields(self, request, obj=None):
@@ -28,7 +36,7 @@ class AdsAdmin(admin.ModelAdmin):
 
     list_editable = ('is_published',)
     search_fields = ('title', 'category__title')
-    readonly_fields = ('created_at', 'updated_at',)
+    readonly_fields = ('created_at', 'updated_at')
     ordering = ('-updated_at',)
 
 
