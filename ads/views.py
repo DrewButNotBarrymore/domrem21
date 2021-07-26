@@ -177,17 +177,5 @@ def remove_img(request, pk):
         return redirect('home')
 
 
-def master_info(request):
-    return render(request, 'ads/master_info.html')
-
-
-def company_info(request):
-    return render(request, 'ads/company_info.html')
-
-
-def about(request):
-    return render(request, 'ads/about.html')
-
-
 def custom_page_not_found_view(request, exception):
     return render(request, "errors/404.html", {})

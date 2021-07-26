@@ -14,7 +14,4 @@ urlpatterns = [
     path('edit_ad/<int:pk>', views.edit_ad, name='edit_ad'),
     path('remove_ad/<int:pk>', views.remove_ad, name='remove_ad'),
     path('remove_img/<int:pk>', views.remove_img, name='remove_img'),
-    path('master_info/', views.master_info, name='master_info'),
-    path('company_info/', views.company_info, name='company_info'),
-    path('about/', views.about, name='about'),
 ]
